@@ -1,0 +1,117 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <chrono>
+
+#define MAX_NUM_BARS 20
+
+using namespace std;
+
+class SortingVisualizer {
+private:
+    vector<int> arr;
+
+    void printArray() {
+        for (int num : arr) {
+            cout << num << " ";
+        }
+        cout << endl;
+    }
+
+public:
+    SortingVisualizer() {
+        arr.resize(MAX_NUM_BARS);
+        generateRandomArray();
+    }
+
+    void generateRandomArray() {
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(1, 100);
+
+        for (int& num : arr) {
+            num = dis(gen);
+        }
+    }
+
+    void bubbleSort() {
+        for (int i = 0; i < arr.size() - 1; i++) {
+            for (int j = 0; j < arr.size() - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swap(arr[j], arr[j + 1]);
+                    printArray();
+                }
+            }
+        }
+    }
+
+    void selectionSort() {
+        for (int i = 0; i < arr.size() - 1; i++) {
+            int min_idx = i;
+            for (int j = i + 1; j < arr.size(); j++) {
+                if (arr[j] < arr[min_idx]) {
+                    min_idx = j;
+                }
+            }
+            swap(arr[min_idx], arr[i]);
+            printArray();
+        }
+    }
+
+    void insertionSort() {
+        for (int i = 1; i < arr.size(); i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+            printArray();
+        }
+    }
+
+    // Public method to print array
+    void printArrayPublic() {
+        printArray();
+    }
+};
+
+int main() {
+    SortingVisualizer sv;
+
+    cout << "Initial array:\n";
+    sv.printArrayPublic();
+
+    char choice;
+    cout << "Press 'b' for Bubble Sort.\n";
+    cout << "Press 's' for Selection Sort.\n";
+    cout << "Press 'i' for Insertion Sort.\n";
+    cout << "Press 'r' to generate a new random array for sorting.\n";
+
+    while (true) {
+        cin >> choice;
+        switch (choice) {
+            case 'b':
+                sv.bubbleSort();
+                break;
+            case 's':
+                sv.selectionSort();
+                break;
+            case 'i':
+                sv.insertionSort();
+                break;
+            case 'r':
+                sv.generateRandomArray();
+                cout << "New random array:\n";
+                sv.printArrayPublic();
+                break;
+            default:
+                cout << "Invalid choice.\n";
+                break;
+        }
+    }
+
+    return 0;
+}
